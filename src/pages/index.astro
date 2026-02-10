@@ -3,121 +3,84 @@ import { getCollection } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
-import Link from "@components/Link.astro";
-import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
 
 const blog = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0,SITE.NUM_POSTS_ON_HOMEPAGE);
+  .slice(0, 3);
 
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0,SITE.NUM_PROJECTS_ON_HOMEPAGE);
+  .slice(0, 3);
 
 const allwork = (await getCollection("work"))
-  .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf())
-  .slice(0,SITE.NUM_WORKS_ON_HOMEPAGE);
-
-const work = await Promise.all(
-  allwork.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  })
-);
+  .sort((a, b) => b.data.dateStart.valueOf() - a.data.dateStart.valueOf())
+  .slice(0, 3);
 
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <h4 class="animate font-semibold text-black dark:text-white">
-      Hi, I'm Nano <span class="text-xl">👋🏻</span> 
+      Hi, I'm Felipe Firmino! 💻
     </h4>
     <div class="space-y-16">
       <section>
         <article class="space-y-4">
           <p class="animate">
-            I am a minimal, seo friendly, accessible portfolio and blog for developers. 
-            I am an even more lightweight version of my popular theme
-            <Link href="https://github.com/markhorn-dev/astro-sphere" aria-label="Astro Sphere on Github" external>
-              Astro Sphere
-            </Link>.
-            I have a lighthouse scores of 100 across the board for performance, 
-            accesibility, best practices and SEO.
+            Fullstack Developer focused on <b>Angular and Golang</b>, uniting technical backend vision with the delivery of responsive, scalable interfaces. I possess a strong ability to communicate complex ideas, articulate technical decisions, and collaborate in agile environments, ensuring the final product aligns perfectly with business needs.
           </p>
           <p class="animate">
-            I come packed with full type safety, a sitemap, an rss feed, markdown 
-            and mdx support (use components in your markdown) through astro integrations.
-            I am styled with tailwind and come preconfigured with light, dark and 
-            system/os theme preferences out of the box.
+            Currently, I work across the full development cycle, from building robust APIs in Go to fluid integration in the frontend. I am passionate about technology, continuous learning, and enjoy solving complex technical challenges (you will frequently find me on <b>LeetCode</b>).
           </p>
           <p class="animate">
-            Visit
-            <Link href="https://github.com/markhorn-dev/astro-nano" aria-label="Astro Nano on Github" external>
-              Astro Nano on Github
-            </Link>
-            to fork the repository, read the docs or one-click deploy on Vercel or Netlify. 
+            <b>Technical Highlights:</b>
+            <ul class="list-disc list-inside ml-2">
+              <li><b>Frontend:</b> Angular, TypeScript, UI/UX, and Automated Testing.</li>
+              <li><b>Backend:</b> Golang, REST API integration, and Databases.</li>
+              <li><b>Languages:</b> Advanced English (C1 Cambridge Certificate).</li>
+            </ul>
+          </p>
+          <p class="animate">
+            Beyond the code, I am a technical reading enthusiast. In my <b>blog</b>, you will find recommendations of programming books that have shaped my approach to software engineering.
           </p>
         </article>
       </section>
 
       <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Latest posts
-          </h5>
-          <Link href="/blog">
-            See all posts
-          </Link>
+  <div class="flex flex-wrap gap-y-2 items-center justify-between">
+    <h5 class="font-semibold text-black dark:text-white">
+      Work Experience
+    </h5>
+    <a href="/work" class="text-blue-500 hover:underline"> View all </a>
+  </div>
+  <ul class="flex flex-col gap-4">
+    {allwork.map(work => (
+      <li>
+        <div class="text-sm opacity-75">
+          {work.data.dateStart.getFullYear()} - 
+          {work.data.dateEnd instanceof Date 
+            ? work.data.dateEnd.getFullYear() 
+            : work.data.dateEnd}
         </div>
-        <ul class="flex flex-col gap-4">
-          {blog.map(post => (
-            <li>
-              <ArrowCard entry={post} />
-            </li>
-          ))}
-        </ul>
-      </section>
-
+        <div class="font-semibold text-black dark:text-white">
+          {work.data.company}
+        </div>
+        <div class="text-sm">
+          {work.data.role}
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
-            Work Experience
+            Featured Projects
           </h5>
-          <Link href="/work">
-            See all work
-          </Link>
-        </div>
-        <ul class="flex flex-col space-y-4">
-          {work.map(entry => (
-            <li>
-              <div class="text-sm opacity-75">
-                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-              </div>
-              <div class="font-semibold text-black dark:text-white">
-                {entry.data.company}
-              </div>
-              <div class="text-sm opacity-75">
-                {entry.data.role}
-              </div>
-              <article>
-                <entry.Content />
-              </article>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Recent projects
-          </h5>
-          <Link href="/projects">
-            See all projects
-          </Link>
+          <a href="/projects" class="text-blue-500 hover:underline"> View all </a>
         </div>
         <ul class="flex flex-col gap-4">
           {projects.map(project => (
@@ -127,33 +90,48 @@ const work = await Promise.all(
           ))}
         </ul>
       </section>
-
-      <section class="animate space-y-4">
-        <h5 class="font-semibold text-black dark:text-white">
-          Let's Connect
-        </h5>
-        <article>
-          <p>
-            If you want to get in touch with me about something or just to say hi,
-            reach out on social media or send me an email.
-          </p>
-        </article>
-        <ul class="flex flex-wrap gap-2">
-          {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                {SOCIAL.NAME}
-              </Link>
-              {"/"}
-            </li>
-          ))}
-          <li class="line-clamp-1">
-            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
-              {SITE.EMAIL}
-            </Link>
-          </li>
-        </ul>
-      </section>
+<section class="animate space-y-4">
+  <h5 class="font-semibold text-black dark:text-white">
+    Let's Connect
+  </h5>
+  <article>
+    <p>
+      If you want to discuss a project, talk about Go architecture, or just swap book recommendations, feel free to reach out.
+    </p>
+  </article>
+  
+  <ul class="flex flex-wrap gap-4">
+    {SOCIALS.map(social => (
+      <li class="flex items-center gap-x-2">
+        <a 
+          href={social.HREF} 
+          target="_blank" 
+          class="flex items-center gap-2 py-1 px-3 rounded border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-blue-500"
+        >
+          {social.NAME.toLowerCase() === "github" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          )}
+          {social.NAME.toLowerCase() === "linkedin" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+          )}
+          {social.NAME.toLowerCase() === "leetcode" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.414l-4.377 4.406a1.374 1.374 0 1 0 1.94 1.94l4.377-4.406A1.374 1.374 0 0 0 13.483 0zm-4.135 9.205a1.374 1.374 0 0 0-1.94 1.94l3.505 3.523a1.374 1.374 0 1 0 1.94-1.94l-3.505-3.523zm-3.341 3.359a1.374 1.374 0 0 0-1.94 1.94l2.103 2.114a1.374 1.374 0 1 0 1.94-1.94l-2.103-2.114zM0 12.874c0 1.455.578 2.806 1.58 3.846l4.757 4.776c1.029 1.033 2.44 1.655 3.927 1.655 1.486 0 2.898-.622 3.927-1.655l4.757-4.776c1.002-1.04 1.58-2.391 1.58-3.846 0-1.454-.578-2.807-1.58-3.846l-4.757-4.776c-1.029-1.034-2.44-1.656-3.927-1.656-1.486 0-2.898.622-3.927 1.656L1.58 9.028C.578 10.068 0 11.42 0 12.874zm7.974 6.981c-.605 0-1.157-.243-1.554-.64l-4.757-4.776c-.403-.404-.638-.943-.638-1.565 0-.623.235-1.162.638-1.565l4.757-4.776c.397-.397.949-.64 1.554-.64.604 0 1.157.243 1.554.64l4.757 4.776c.403.404.638.944.638 1.565 0 .622-.235 1.161-.638 1.565l-4.757 4.776c-.397.397-.95.64-1.554.64z"/></svg>
+          )}
+          <span class="text-sm font-medium">{social.NAME}</span>
+        </a>
+      </li>
+    ))}
+    <li class="flex items-center">
+      <a 
+        href={`mailto:${SITE.EMAIL}`} 
+        class="flex items-center gap-2 py-1 px-3 rounded border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-blue-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span class="text-sm font-medium">Email</span>
+      </a>
+    </li>
+  </ul>
+</section>
     </div>
   </Container>
 </PageLayout>

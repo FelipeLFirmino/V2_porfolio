@@ -8,8 +8,10 @@ import { SITE } from "@consts";
   <Container>
     <div class="flex flex-wrap gap-y-2 justify-between">
       <Link href="/" underline={false}>
-        <div class="font-semibold">
-          {SITE.NAME}
+        <div class="font-semibold flex items-center">
+          <span class="inline-block overflow-hidden whitespace-nowrap border-r-2 border-black dark:border-white pr-1 animate-typing">
+            {SITE.NAME}
+          </span>
         </div>
       </Link>
       <nav class="flex gap-1">
@@ -20,7 +22,7 @@ import { SITE } from "@consts";
           {`/`}
         </span>
         <Link href="/work">
-          work
+          Experience
         </Link>
         <span>
           {`/`}
@@ -32,3 +34,20 @@ import { SITE } from "@consts";
     </div>
   </Container>
 </header>
+
+<style>
+  .animate-typing {
+    width: 0;
+    animation: typing 2s steps(15, end) forwards, blink 0.8s infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink {
+    from { border-color: transparent }
+    to { border-color: currentColor }
+  }
+</style>
