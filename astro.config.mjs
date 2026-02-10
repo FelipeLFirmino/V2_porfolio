@@ -5,5 +5,6 @@ import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
   site: "https://FelipeLFirmino.github.io",
+  base: "/V2_porfolio",
   integrations: [mdx(), sitemap(), tailwind()],
 });
